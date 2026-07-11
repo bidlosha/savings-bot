@@ -1,10 +1,21 @@
+import os
+
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker
 )
 
 from app.config import DATABASE_URL
-from app.database.models import Base
+
+
+# создаем папку для SQLite
+if DATABASE_URL.startswith("sqlite"):
+
+    os.makedirs(
+        "data",
+        exist_ok=True
+    )
+
 
 
 engine = create_async_engine(
@@ -13,10 +24,16 @@ engine = create_async_engine(
 )
 
 
+
 SessionLocal = async_sessionmaker(
     engine,
     expire_on_commit=False
 )
+
+
+
+from app.database.models import Base
+
 
 
 async def init_db():
